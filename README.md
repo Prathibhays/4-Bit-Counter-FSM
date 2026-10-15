@@ -1,32 +1,39 @@
-@'
+# 4-Bit Counter FSM with Run/Hold Control and 7-Segment Output
 
-# 4-Bit Counter FSM
+## Behavior
+- `run=1`: FSM is in RUN and increments on every rising clock edge.
+- `run=0`: FSM is in HOLD and retains the count.
+- `reset=1`: synchronous, active-high reset clears count to `0000`.
+- Count wraps from `1111` to `0000`.
+- `seg[6:0]` is an active-high common-cathode pattern in `{a,b,c,d,e,f,g}` order.
 
-## Project Overview
+## Project files
+- `src/counter_fsm.sv`: FSM, next-count logic, and 4-bit register.
+- `src/hex_to_7seg.sv`: 16-value combinational hexadecimal decoder.
+- `src/counter_top.sv`: connects the counter and decoder.
+- `tb/counter_tb.sv`: tests reset, increment, hold, wrap, and all decoder patterns.
+- `docs/`: state diagram description, next-count table, and 7-segment truth table.
 
-This project implements a 4-bit counter with RUN/HOLD control and a hexadecimal-to-seven-segment decoder.
+## State transitions
+| Current state | run | Next state |
+|---|---:|---|
+| HOLD | 0 | HOLD (self-loop) |
+| HOLD | 1 | RUN |
+| RUN | 0 | HOLD |
+| RUN | 1 | RUN (self-loop) |
 
-The design is organized into SystemVerilog source modules, a testbench, project documentation, and simulation instructions.
+## Next-count MUX
+| run | Selected input | Next count |
+|---:|---|---|
+| 0 | `count` | `count` |
+| 1 | `count + 1` | `(count + 1) mod 16` |
 
-## Project Architecture
+## Run simulation on Windows CMD
+Run these commands from the project root, adjusting the install path if yours differs:
 
-```text
-4-Bit-Counter-FSM/
-├── README.md
-├── .gitignore
-├── src/
-│   ├── counter_fsm.sv
-│   ├── hex_to_7seg.sv
-│   └── counter_top.sv
-├── tb/
-│   └── counter_tb.sv
-├── docs/
-│   ├── FSM DESIGN.pdf
-│   ├── state_diagram.png
-│   ├── dff_diagram.svg
-│   ├── mux_counter_diagram.svg
-│   ├── seven_segment_truth_table.png
-│   └── project_report.pdf
-└── simulation/
-    └── README.md
+```bat
+C:\iverilog12\bin\iverilog.exe -g2012 -s counter_tb -o counter_sim.exe src\counter_fsm.sv src\hex_to_7seg.sv src\counter_top.sv tb\counter_tb.sv
+C:\iverilog12\bin\vvp.exe counter_sim.exe
 ```
+
+The final output should say `ALL TESTS PASSED`. The simulation also creates `counter_fsm.vcd`, which can be opened with GTKWave.

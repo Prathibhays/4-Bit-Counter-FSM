@@ -1,0 +1,8 @@
+RUN/HOLD FSM — all transitions are labeled
+
+HOLD -- run=1 --> RUN
+HOLD -- run=0 --> HOLD  (self-loop)
+RUN  -- run=0 --> HOLD
+RUN  -- run=1 --> RUN   (self-loop)
+
+Transition condition is only `run`: run=1 selects RUN, run=0 selects HOLD.

@@ -1,29 +1,10 @@
-# Simulation Instructions
+# Simulation
 
-## Requirements
+From the project root in Windows CMD, compile and run:
 
-- Icarus Verilog with SystemVerilog support
-- A terminal opened at the project root
-
-## Compile
-
-```powershell
-iverilog -g2012 -o counter_sim.exe src/counter_fsm.sv src/hex_to_7seg.sv src/counter_top.sv tb/counter_tb.sv
+```bat
+C:\iverilog12\bin\iverilog.exe -g2012 -s counter_tb -o counter_sim.exe src\counter_fsm.sv src\hex_to_7seg.sv src\counter_top.sv tb\counter_tb.sv
+C:\iverilog12\bin\vvp.exe counter_sim.exe
 ```
 
-## Run
-
-```powershell
-vvp counter_sim.exe
-```
-
-## Verification
-
-Check the testbench output for:
-
-- Reset behavior
-- RUN and HOLD functionality
-- Counter increment and rollover
-- Seven-segment decoder output
-
-The design is considered verified only after the testbench produces the expected results.
+If Icarus Verilog is installed in another folder, replace `C:\iverilog12\bin\` with your actual `bin` path. A successful run ends with `ALL TESTS PASSED`.
