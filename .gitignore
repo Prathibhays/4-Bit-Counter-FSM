@@ -1,6 +1,0 @@
-# Simulation output
-counter_sim.exe
-counter_fsm.vcd
-*.vcd
-*.out
-*.vvp
